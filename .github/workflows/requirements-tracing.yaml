@@ -49,7 +49,7 @@ jobs:
 
       - name: Run OpenFastTrace
         id: run-oft
-        uses: ./.github/actions/run-oft
+        uses: eclipse-uprotocol/ci-cd/.github/actions/run-oft@main
         with:
           file-patterns: ${{ inputs.oft-file-patterns }}
 
