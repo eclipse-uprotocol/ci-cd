@@ -17,8 +17,7 @@ name: Matrix-test
 
 on:
   workflow_call:
-  workflow_dispatch:
-            
+
 env:
   RUST_TOOLCHAIN: ${{ vars.RUST_TOOLCHAIN || 'stable' }}
   RUSTFLAGS: -Dwarnings

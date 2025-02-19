@@ -11,13 +11,14 @@
 #  SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************/
 
-# Checks if the MSRV declared in Cargo.toml is correct.
+# Checks if the Minimum Supported Rust Version (MSRV) declared in a Rust project's
+# Cargo.toml is correct, i.e. if the project can be compiled using a Rust toolchain
+# of that version.
 
 name: Check MSRV
 
 on:
   workflow_call:
-  workflow_dispatch:
 
 env:
   RUST_TOOLCHAIN: ${{ vars.RUST_TOOLCHAIN || 'stable' }}

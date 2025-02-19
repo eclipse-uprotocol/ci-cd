@@ -19,7 +19,6 @@ name: Check latest dependencies
 
 on:
   workflow_call:
-  workflow_dispatch:
 
 env:
   CARGO_TERM_COLOR: always

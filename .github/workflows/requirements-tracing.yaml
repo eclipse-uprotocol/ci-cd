@@ -28,13 +28,6 @@ on:
       tracing-report-url:
         description: 'URL of the requirements tracing report'
         value: ${{ jobs.tracing.outputs.tracing-report-url }}
-  workflow_dispatch:
-    inputs:
-      oft-file-patterns:
-        description: |
-          A whitespace separated list of glob patterns which specify the files to include in the OFT trace run.
-          If not specified, defaults to all files relevant for checking up-rust against the uProtocol Specification.
-        type: string
 
 jobs:
   tracing:

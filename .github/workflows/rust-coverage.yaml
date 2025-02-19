@@ -23,7 +23,6 @@ on:
       test_coverage_url:
         description: 'URL of the test coverage artifact'
         value: ${{ jobs.coverage.outputs.test_coverage_url }}
-  workflow_dispatch:
           
 env:
   RUST_TOOLCHAIN: ${{ vars.RUST_TOOLCHAIN || 'stable' }}
