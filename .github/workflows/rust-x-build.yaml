@@ -11,15 +11,13 @@
 #  SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************/
 
-# Run all-feature tests on multiple architecture targets
-# Note: tbd whether this adds any actual value...
+# Executes all of a Rust project's tests for several popular target architectures.
 
 name: X-platform
 
 on:
   workflow_call:
-  workflow_dispatch:
-            
+
 env:
   RUST_TOOLCHAIN: ${{ vars.RUST_TOOLCHAIN || 'stable' }}
   RUSTFLAGS: -Dwarnings
@@ -29,8 +27,6 @@ jobs:
   build:
     name: build and test
     runs-on: ${{ matrix.runner }}
-    env: 
-      NEXTEST_EXPERIMENTAL_LIBTEST_JSON: 1
     strategy:
       matrix:
         include:
@@ -66,4 +62,4 @@ jobs:
      
       - name: Run cargo nextest
         run: |
-          cargo nextest run --all-features
+          cargo nextest run --no-fail-fast --all-features

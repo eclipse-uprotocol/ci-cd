@@ -38,7 +38,6 @@ on:
       license_report_url:
         description: "URL of the license report artifact"
         value: ${{ jobs.license_check.outputs.license_report_url }}
-  workflow_dispatch:
           
 env:
     RUST_TOOLCHAIN: ${{ vars.RUST_TOOLCHAIN || 'stable' }}
