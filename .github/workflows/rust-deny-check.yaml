@@ -1,0 +1,60 @@
+# ********************************************************************************
+#  Copyright (c) 2025 Contributors to the Eclipse Foundation
+#
+#  See the NOTICE file(s) distributed with this work for additional
+#  information regarding copyright ownership.
+#
+#  This program and the accompanying materials are made available under the
+#  terms of the Apache License Version 2.0 which is available at
+#  https://www.apache.org/licenses/LICENSE-2.0
+#
+#  SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************/
+
+# Runs "cargo deny check" on a Rust project.
+# Based on the job definition recommended by
+# https://github.com/EmbarkStudios/cargo-deny-action#recommended-pipeline-if-using-advisories-to-avoid-sudden-breakages
+
+name: Run cargo-deny checks
+on:
+  workflow_call:
+    inputs:
+      config-file:
+        description: |
+          Path to the cargo-deny configuration file.
+          See https://embarkstudios.github.io/cargo-deny/checks/index.html for details regarding
+          configuration file syntax.
+        type: string
+        required: false
+        default: ${{ github.workspace }}/deny.toml
+      arguments:
+        description: |
+          Generic arguments to pass on to cargo deny, i.e. arguments
+          that are not specific to the check command.
+          This can be used to set the path to the Cargo.toml file, if necessary.
+        type: string
+        required: false
+        default: --all-features
+
+jobs:
+  cargo-deny:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        checks:
+          - advisories
+          - bans licenses sources
+
+    # Prevent sudden announcement of a new advisory from failing CI
+    continue-on-error: ${{ matrix.checks == 'advisories' }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: "recursive"
+        
+      - uses: EmbarkStudios/cargo-deny-action@v2
+        with:
+          command: check ${{ matrix.checks }}
+          command-arguments: --config ${{ inputs.config-file }}
+          arguments: ${{ inputs.arguments }}
