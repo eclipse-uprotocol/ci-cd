@@ -19,18 +19,19 @@ name: Run cargo-deny checks
 on:
   workflow_call:
     inputs:
-      config-file:
+      command-arguments:
         description: |
-          Path to the cargo-deny configuration file.
-          See https://embarkstudios.github.io/cargo-deny/checks/index.html for details regarding
-          configuration file syntax.
+          Arguments to pass to the check command.
+          See https://embarkstudios.github.io/cargo-deny/cli/check.html for details regarding
+          syntax of the check command.
+          This can for example be used to set a non-default path to the configuration file.
         type: string
         required: false
-        default: ${{ github.workspace }}/deny.toml
       arguments:
         description: |
           Generic arguments to pass on to cargo deny, i.e. arguments
           that are not specific to the check command.
+          See https://embarkstudios.github.io/cargo-deny/cli/common.html for details.
           This can be used to set the path to the Cargo.toml file, if necessary.
         type: string
         required: false
@@ -56,5 +57,5 @@ jobs:
       - uses: EmbarkStudios/cargo-deny-action@v2
         with:
           command: check ${{ matrix.checks }}
-          command-arguments: --config ${{ inputs.config-file }}
+          command-arguments: ${{ inputs.command-arguments }}
           arguments: ${{ inputs.arguments }}
