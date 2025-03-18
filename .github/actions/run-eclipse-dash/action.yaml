@@ -43,7 +43,7 @@ runs:
       shell: bash
       env:
         DEPS_FILE: ${{ inputs.components-file }}
-      run: check-3rd-party-licenses.sh
+      run: ${GITHUB_ACTION_PATH}/check-3rd-party-licenses.sh
 
     - name: "Upload summary file"
       id: upload-summary
