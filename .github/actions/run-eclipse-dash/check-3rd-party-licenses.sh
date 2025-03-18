@@ -18,6 +18,17 @@ dash_summary=${DASH_SUMMARY:-"DASH_SUMMARY.txt"}
 project=${PROJECT:-"automotive.uprotocol"}
 token=${DASH_TOKEN:-""}
 
+function run_dash {
+  args=(-jar "$dash_jar" -timeout 60 -batch 90 -summary "$dash_summary")
+  if [[ -n "$token" ]]; then
+    args=("${args[@]}" -review -token "$token" -project "$project")
+  fi
+  args=("${args[@]}" "$deps_file")
+
+  echo "checking 3rd party licenses..."
+  java "${args[@]}"
+}
+
 if [[ ! -r "$dash_jar" ]]; then
   echo "Eclipse Dash JAR file [${dash_jar}] not found, downloading latest version from GitHub..."
   wget_bin=$(which wget)
@@ -30,11 +41,12 @@ if [[ ! -r "$dash_jar" ]]; then
   fi
 fi
 
-args=(-jar "$dash_jar" -timeout 60 -batch 90 -summary "$dash_summary")
-if [[ -n "$token" ]]; then
-  args=("${args[@]}" -review -token "$token" -project "$project")
+if run_dash
+then
+  echo "checks-failed=0" >> "$GITHUB_OUTPUT"
+  echo "License information of 3rd party dependencies has been vetted successfully." >> "$GITHUB_STEP_SUMMARY"
+else
+  echo "checks-failed=1" >> "$GITHUB_OUTPUT"
+  echo "License information of some 3rd party dependencies could not be vetted successfully." >> "$GITHUB_STEP_SUMMARY"
+  echo "A summary file containing the vetted information has been attached to this workflow run." >> "$GITHUB_STEP_SUMMARY"
 fi
-args=("${args[@]}" "$deps_file")
-
-echo "checking 3rd party licenses..."
-java "${args[@]}"
