@@ -24,6 +24,12 @@ inputs:
       A whitespace separated list of glob patterns which specify the files to include in the OFT trace run.
     default: "**/*.*"
     required: false
+  tags:
+    description: |
+      A comma separated list of tags to use for filtering specification items.
+      If not set explicitly, all specification items from files matching the file patterns are considered.
+    default: ""
+    required: false
 outputs:
   oft-exit-code:
     description: |
@@ -49,6 +55,7 @@ runs:
         file-patterns: ${{ inputs.file-patterns }}
         report-filename: ${{ env.TRACING_REPORT_FILE_NAME }}
         report-format: "html"
+        tags: ${{ inputs.tags }}
 
     - name: Upload tracing report (html)
       uses: actions/upload-artifact@v4

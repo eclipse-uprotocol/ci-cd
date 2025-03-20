@@ -9,6 +9,7 @@ The action uses the [standard OpenFastTrace Action](https://github.com/itsallcod
 | Name            | Description                                                                                           |
 | :-------------- | :---------------------------------------------------------------------------------------------------- |
 | `file-patterns` | A whitespace separated list of glob patterns which specify the files to include in the OFT trace run. |
+| `tags`          | A comma separated list of tags to use for [filtering specification items](https://github.com/itsallcode/openfasttrace/blob/main/doc/user_guide.md#distributing-the-detailing-work).<br>If not set explicitly, all specification items from files matching the file patterns are considered. |
 
 # Outputs
 
