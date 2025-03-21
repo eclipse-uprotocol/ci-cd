@@ -24,6 +24,13 @@ on:
           A whitespace separated list of glob patterns which specify the files to include in the OFT trace run.
           If not specified, defaults to all files relevant for checking up-rust against the uProtocol Specification.
         type: string
+      oft-tags:
+        description: |
+          A comma separated list of tags to use for filtering specification items.
+          If not set explicitly, all specification items from files matching the file patterns are considered.
+        type: string
+        required: false
+        default: ""
     outputs:
       tracing-report-url:
         description: 'URL of the requirements tracing report'
@@ -45,6 +52,7 @@ jobs:
         uses: eclipse-uprotocol/ci-cd/.github/actions/run-oft@main
         with:
           file-patterns: ${{ inputs.oft-file-patterns }}
+          tags: ${{ inputs.oft-tags }}
 
       - name: "Determine exit code"
         run: |
