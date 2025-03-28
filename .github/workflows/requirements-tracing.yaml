@@ -41,12 +41,13 @@ on:
           then the file being read will be `.env.oft-latest`.
 
           If this parameter is set to a non-empty value but the corresponding file does not exist, execution of the
-          workflow will fail. Otherwise, the following variables are read from the file and will override any values specified explicitly using the corresponding input parameters:
+          workflow will fail. Otherwise, any values specified explicitly using the other input parameters are ignored
+          and are read from the file using the following variable names instead:
 
           * `OFT_FILE_PATTERNS`
           * `OFT_TAGS`
 
-          The variable values may refer to other variables defined in the file:
+          The variable values may may also refer to other variables defined in the file:
           
           ```sh
           OTHER_VARIABLE="*.yaml"
@@ -72,7 +73,9 @@ jobs:
         with:
           submodules: "recursive"
 
-      - run: |
+      - name: "Determine OpenFastTrace parameters from workflow input params"
+        if: inputs.env-file-suffix == ''
+        run: |
           echo "OFT_FILE_PATTERNS=${{ inputs.oft-file-patterns }}" >> $GITHUB_ENV
           echo "OFT_TAGS=${{ inputs.oft-tags }}" >> $GITHUB_ENV
 
