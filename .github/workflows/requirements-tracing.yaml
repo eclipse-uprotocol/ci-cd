@@ -24,6 +24,8 @@ on:
           A whitespace separated list of glob patterns which specify the files to include in the OFT trace run.
           If not specified, defaults to all files relevant for checking up-rust against the uProtocol Specification.
         type: string
+        required: false
+        default: "."
       oft-tags:
         description: |
           A comma separated list of tags to use for filtering specification items.
@@ -31,9 +33,32 @@ on:
         type: string
         required: false
         default: ""
+      env-file-suffix:
+        description: |
+          Instead of explicitly specifying the file patterns and tags to use for the OpenFastTrace run, these
+          values can also be read from a file in the workspace root folder. The file's name must start with
+          `.env.` and end with this parameter's value. For example, if this parameter has value `oft-latest`,
+          then the file being read will be `.env.oft-latest`.
+
+          If this parameter is set to a non-empty value but the corresponding file does not exist, execution of the
+          workflow will fail. Otherwise, the following variables are read from the file and will override any values specified explicitly using the corresponding input parameters:
+
+          * `OFT_FILE_PATTERNS`
+          * `OFT_TAGS`
+
+          The variable values may refer to other variables defined in the file:
+          
+          ```sh
+          OTHER_VARIABLE="*.yaml"
+          OFT_FILE_PATTERNS="$OTHER_VARIABLE *.md"
+          OFT_TAGS="_,SomeTag"
+          ```
+        type: string
+        required: false
+        default: ""
     outputs:
       tracing-report-url:
-        description: 'URL of the requirements tracing report'
+        description: "URL of the requirements tracing report"
         value: ${{ jobs.tracing.outputs.tracing-report-url }}
 
 jobs:
@@ -47,12 +72,23 @@ jobs:
         with:
           submodules: "recursive"
 
+      - run: |
+          echo "OFT_FILE_PATTERNS=${{ inputs.oft-file-patterns }}" >> $GITHUB_ENV
+          echo "OFT_TAGS=${{ inputs.oft-tags }}" >> $GITHUB_ENV
+
+      - name: "Determine OpenFastTrace parameters from .env file"
+        if: inputs.env-file-suffix != ''
+        uses: xom9ikk/dotenv@v2.3.0
+        with:
+          mode: ${{ inputs.env-file-suffix }}
+          load-mode: strict
+
       - name: Run OpenFastTrace
         id: run-oft
         uses: eclipse-uprotocol/ci-cd/.github/actions/run-oft@main
         with:
-          file-patterns: ${{ inputs.oft-file-patterns }}
-          tags: ${{ inputs.oft-tags }}
+          file-patterns: ${{ env.OFT_FILE_PATTERNS }}
+          tags: ${{ env.OFT_TAGS }}
 
       - name: "Determine exit code"
         run: |
