@@ -57,9 +57,7 @@ jobs:
           toolchain: ${{ env.RUST_TOOLCHAIN }}
           targets: "${{ matrix.target }}"
       - uses: Swatinem/rust-cache@v2
-      # Using nextest because it's faster than built-in test
-      - uses: taiki-e/install-action@nextest
      
-      - name: Run cargo nextest
+      - name: Run tests
         run: |
-          cargo nextest run --no-fail-fast --all-features
+          cargo test --no-fail-fast --all-features --all-targets
