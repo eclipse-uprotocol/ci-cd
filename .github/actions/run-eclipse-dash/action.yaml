@@ -53,7 +53,7 @@ runs:
     - name: "Upload summary file"
       id: upload-summary
       if: ${{ steps.run-checks.outputs.checks-failed == '1' }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: Dash summary report
         path: ${{ env.DASH_SUMMARY }}
