@@ -17,6 +17,8 @@ dash_jar=${DASH_JAR:-"${HOME}/dash.jar"}
 dash_summary=${DASH_SUMMARY:-"DASH_SUMMARY.txt"}
 project=${PROJECT:-"automotive.uprotocol"}
 token=${DASH_TOKEN:-""}
+# see https://github.com/eclipse-dash/dash-licenses#get-it
+dash_url="https://repo.eclipse.org/service/rest/v1/search/assets/download?sort=version&repository=dash-maven2-releases&maven.groupId=org.eclipse.dash&maven.artifactId=org.eclipse.dash.licenses&maven.extension=jar"
 
 if [[ ! -r "$dash_jar" ]]; then
   echo "Eclipse Dash JAR file [${dash_jar}] not found, downloading latest version from GitHub..."
@@ -25,7 +27,7 @@ if [[ ! -r "$dash_jar" ]]; then
     echo "wget command not available on path"
     exit 127
   else
-    wget --quiet -O "$dash_jar" "https://repo.eclipse.org/service/local/artifact/maven/redirect?r=dash-licenses&g=org.eclipse.dash&a=org.eclipse.dash.licenses&v=LATEST"
+    wget --quiet -O "$dash_jar" "$dash_url"
   echo "successfully downloaded Eclipse Dash JAR to ${dash_jar}"
   fi
 fi
