@@ -81,10 +81,11 @@ jobs:
 
       - name: "Determine OpenFastTrace parameters from .env file"
         if: inputs.env-file-suffix != ''
-        uses: xom9ikk/dotenv@v2.3.0
+        uses: falti/dotenv-action@v1.2.0
         with:
-          mode: ${{ inputs.env-file-suffix }}
-          load-mode: strict
+          path: ".env.${{ inputs.env-file-suffix }}"
+          export-variables: true
+          keys-case: bypass
 
       - name: Run OpenFastTrace
         id: run-oft
