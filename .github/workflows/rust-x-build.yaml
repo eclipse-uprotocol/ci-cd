@@ -47,16 +47,15 @@ jobs:
             target: aarch64-apple-darwin
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           submodules: "recursive"
      
       - name: Install Rust
-        uses: dtolnay/rust-toolchain@master
+        uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           toolchain: ${{ env.RUST_TOOLCHAIN }}
-          targets: "${{ matrix.target }}"
-      - uses: Swatinem/rust-cache@v2
+          target: "${{ matrix.target }}"
      
       - name: Run tests
         run: |
