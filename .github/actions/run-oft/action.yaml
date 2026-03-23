@@ -58,7 +58,7 @@ runs:
         tags: ${{ inputs.tags }}
 
     - name: Upload tracing report (html)
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       id: upload-tracing-report
       if: ${{ steps.run-oft.outputs.oft-exit-code != '' }}
       with:

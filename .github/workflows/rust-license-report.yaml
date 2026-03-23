@@ -51,13 +51,12 @@ jobs:
     outputs:
       license_report_url: ${{ steps.license_report.outputs.artifact-url }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
       with:
         submodules: "recursive"
-    - uses: dtolnay/rust-toolchain@master
+    - uses: actions-rust-lang/setup-rust-toolchain@v1
       with: 
         toolchain: ${{ env.RUST_TOOLCHAIN }}
-    - uses: Swatinem/rust-cache@v2
 
     - name: Install cargo-about
       run: |
@@ -65,7 +64,7 @@ jobs:
     - name: Create license report
       run: |
         cargo about generate --config ${{ inputs.config }} ${{ inputs.templates }} > licenses.html
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v6
       id: license_report
       with:
         name: license-report
