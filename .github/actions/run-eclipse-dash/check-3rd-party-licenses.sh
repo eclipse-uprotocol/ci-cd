@@ -18,7 +18,7 @@ dash_summary=${DASH_SUMMARY:-"DASH_SUMMARY.txt"}
 project=${PROJECT:-"automotive.uprotocol"}
 token=${DASH_TOKEN:-""}
 # see https://github.com/eclipse-dash/dash-licenses#get-it
-dash_url="https://repo.eclipse.org/service/rest/v1/search/assets/download?sort=version&repository=dash-maven2-releases&maven.groupId=org.eclipse.dash&maven.artifactId=org.eclipse.dash.licenses&maven.extension=jar"
+dash_url="https://repo.eclipse.org/repository/dash-maven2-releases/org/eclipse/dash/org.eclipse.dash.licenses/1.1.0/org.eclipse.dash.licenses-1.1.0.jar"
 
 if [[ ! -r "$dash_jar" ]]; then
   echo "Eclipse Dash JAR file [${dash_jar}] not found, downloading latest version from GitHub..."

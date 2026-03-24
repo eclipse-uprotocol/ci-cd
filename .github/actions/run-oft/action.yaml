@@ -50,7 +50,7 @@ runs:
 
     - name: Run OpenFastTrace
       id: run-oft
-      uses: itsallcode/openfasttrace-github-action@v0.4.0
+      uses: itsallcode/openfasttrace-github-action@e302f0817c05efdf45ce863925568c372a0b414e # v0.4.0
       with:
         file-patterns: ${{ inputs.file-patterns }}
         report-filename: ${{ env.TRACING_REPORT_FILE_NAME }}
@@ -58,7 +58,7 @@ runs:
         tags: ${{ inputs.tags }}
 
     - name: Upload tracing report (html)
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
       id: upload-tracing-report
       if: ${{ steps.run-oft.outputs.oft-exit-code != '' }}
       with:
