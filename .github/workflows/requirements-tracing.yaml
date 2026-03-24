@@ -61,6 +61,9 @@ on:
       tracing-report-url:
         description: "URL of the requirements tracing report"
         value: ${{ jobs.tracing.outputs.tracing-report-url }}
+      oft-exit-code:
+        description: "Exit code of the OpenFastTrace run (0: success, 1: failure)"
+        value: ${{ jobs.tracing.outputs.oft-exit-code }}
 
 jobs:
   tracing:
@@ -68,6 +71,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       tracing-report-url: ${{ steps.run-oft.outputs.tracing-report-url }}
+      oft-exit-code: ${{ steps.run-oft.outputs.oft-exit-code }}
     steps:
       - uses: actions/checkout@v6
         with:
