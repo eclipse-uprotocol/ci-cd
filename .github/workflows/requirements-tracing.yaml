@@ -69,7 +69,7 @@ jobs:
     outputs:
       tracing-report-url: ${{ steps.run-oft.outputs.tracing-report-url }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           submodules: "recursive"
 
@@ -81,7 +81,7 @@ jobs:
 
       - name: "Determine OpenFastTrace parameters from .env file"
         if: inputs.env-file-suffix != ''
-        uses: falti/dotenv-action@v1.2.0
+        uses: falti/dotenv-action@73fafca04177425fd3e0a0849257015ae9d42034 # v1.2.0
         with:
           path: ".env.${{ inputs.env-file-suffix }}"
           export-variables: true
@@ -89,7 +89,7 @@ jobs:
 
       - name: Run OpenFastTrace
         id: run-oft
-        uses: eclipse-uprotocol/ci-cd/.github/actions/run-oft@main
+        uses: eclipse-uprotocol/ci-cd/.github/actions/run-oft@c9fb74b20429e69c15021c64dcf343447a2f46a2 # main
         with:
           file-patterns: ${{ env.OFT_FILE_PATTERNS }}
           tags: ${{ env.OFT_TAGS }}
