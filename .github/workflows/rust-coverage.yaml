@@ -36,15 +36,17 @@ jobs:
     outputs:
       test_coverage_url: ${{ steps.test_coverage_html.outputs.artifact-url }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           submodules: "recursive"
 
-      - uses: actions-rust-lang/setup-rust-toolchain@v1
+      - uses: actions-rust-lang/setup-rust-toolchain@150fca883cd4034361b621bd4e6a9d34e5143606 # v1.15.4
         with: 
           toolchain: ${{ env.RUST_TOOLCHAIN }}
       - name: Install cargo-tarpaulin
-        uses: taiki-e/install-action@cargo-tarpaulin
+        uses: taiki-e/install-action@7bc99eee1f1b8902a125006cf790a1f4c8461e63 # v2.69.8
+        with:
+            tool: cargo-tarpaulin
 
       - name: Run tests and report code coverage
         run: |
@@ -52,19 +54,19 @@ jobs:
           RUSTC_BOOTSTRAP=1 cargo tarpaulin --workspace --implicit-test-threads --all-features --all-targets --doc -o xml -o lcov -o html
 
       - name: Upload coverage report (lcov)
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         id: test_coverage_lcov
         with:
           name: code-coverage-lcov
           path: lcov.info
       - name: Upload coverage report (xml)
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         id: test_coverage_xml
         with:
           name: code-coverage-xml
           path: cobertura.xml
       - name: Upload coverage report (html)
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         id: test_coverage_html
         with:
           name: code-coverage-html
@@ -74,7 +76,7 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         if: env.CODECOV_TOKEN != ''
-        uses: codecov/codecov-action@v4.0.1
+        uses: codecov/codecov-action@e0b68c6749509c5f83f984dd99a76a1c1a231044 # v4.0.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: ${{ vars.GITHUB_REPOSITORY }}
