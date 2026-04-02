@@ -1,0 +1,87 @@
+# ********************************************************************************
+#  Copyright (c) 2025 Contributors to the Eclipse Foundation
+#
+#  See the NOTICE file(s) distributed with this work for additional
+#  information regarding copyright ownership.
+#
+#  This program and the accompanying materials are made available under the
+#  terms of the Apache License Version 2.0 which is available at
+#  https://www.apache.org/licenses/LICENSE-2.0
+#
+#  SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************/
+
+name: 'Check Spec Version'
+description: 'Checks the current up-spec version and compares it with the latest version'
+author: 'Eclipse uProtocol'
+
+inputs:
+  submodule-path:
+    description: 'Path to the up-spec submodule'
+    required: false
+    default: 'up-spec'
+
+outputs:
+  current-version:
+    description: 'Current up-spec version'
+    value: ${{ steps.current-spec-version.outputs.current_up_spec_version }}
+  latest-version:
+    description: 'Latest up-spec version'
+    value: ${{ steps.latest-spec-version.outputs.latest_up_spec_version }}
+  is-latest:
+    description: 'Whether the current version is the latest (true/false)'
+    value: ${{ steps.is-latest.outputs.is_latest }}
+
+runs:
+  using: 'composite'
+  steps:
+    - uses: actions/checkout@v6
+      with:
+        submodules: 'recursive'
+
+    - name: Get current spec version
+      id: current-spec-version
+      shell: bash
+      run: |
+        cd ${{ inputs.submodule-path }}
+        UP_SPEC_COMMIT_HASH=$(git rev-parse --short HEAD)
+        echo "Up-spec submodule is at commit: $UP_SPEC_COMMIT_HASH"
+        git fetch --tags
+        CURRENT_UP_SPEC_VERSION=$(git describe --tags --exact-match 2>/dev/null || echo "")
+        if [ -z "$CURRENT_UP_SPEC_VERSION" ]; then
+          echo "No tag found at up-spec commit $UP_SPEC_COMMIT_HASH, using nearest tagged commit hash"
+          NEAREST_UP_SPEC_VERSION=$(git tag --sort=-creatordate | head -n 1)
+          CURRENT_UP_SPEC_VERSION=$NEAREST_UP_SPEC_VERSION.$UP_SPEC_COMMIT_HASH
+          echo "nearest tag and its commit hash: $CURRENT_UP_SPEC_VERSION"
+        else
+          echo "Current commit is tagged as: $CURRENT_UP_SPEC_VERSION"
+        fi
+        echo "current_up_spec_version=$CURRENT_UP_SPEC_VERSION" >> $GITHUB_OUTPUT
+
+    - name: Get latest spec version
+      id: latest-spec-version
+      shell: bash
+      run: |
+        cd ${{ inputs.submodule-path }}
+        git fetch --tags
+        LATEST_UP_SPEC_VERSION=$(git ls-remote --tags origin | grep -v '\^{}' | grep -E 'refs/tags/v?[0-9]+\.[0-9]+' | sort -V -k2 | tail -1 | cut -d'/' -f3)
+        if [ -n "$LATEST_UP_SPEC_VERSION" ]; then
+          echo "Found latest up-spec tag: $LATEST_UP_SPEC_VERSION"
+        else
+          # Fallback to main branch if no tags found
+          LATEST_UP_SPEC_VERSION=$(git ls-remote origin main | cut -f1 | cut -c1-7)
+          echo "No tags found, using main branch commit: $LATEST_UP_SPEC_VERSION"
+        fi
+        echo "latest_up_spec_version=$LATEST_UP_SPEC_VERSION" >> $GITHUB_OUTPUT
+
+    - name: Is current spec version latest?
+      id: is-latest
+      shell: bash
+      run: |
+        if [ "${{ steps.current-spec-version.outputs.current_up_spec_version }}" = "${{ steps.latest-spec-version.outputs.latest_up_spec_version }}" ]; then
+          echo "Current spec version is the latest."
+          echo "is_latest=true" >> $GITHUB_OUTPUT
+        else
+          echo "Current spec version is not the latest."
+          echo "is_latest=false" >> $GITHUB_OUTPUT
+        fi
