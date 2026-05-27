@@ -1,0 +1,54 @@
+# ********************************************************************************
+#  Copyright (c) 2024 Contributors to the Eclipse Foundation
+#
+#  See the NOTICE file(s) distributed with this work for additional
+#  information regarding copyright ownership.
+#
+#  This program and the accompanying materials are made available under the
+#  terms of the Apache License Version 2.0 which is available at
+#  https://www.apache.org/licenses/LICENSE-2.0
+#
+#  SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************/
+
+# Checks security policies for GitHub Actions
+
+name: GitHub Actions Policy Checks
+
+on:
+  workflow_call:
+
+permissions: {}
+
+jobs:
+  poutine:
+    name: Check GitHub Workflows using poutine
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write # Required for upload-sarif to upload SARIF files.
+      contents: read
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - name: poutine - GitHub Actions SAST
+        uses: boostsecurityio/poutine-action@e240ebd3eff8b2db5a8e5f6b28f58739d7db2247 # v1.1.4
+      - name: Upload poutine SARIF file
+        uses: github/codeql-action/upload-sarif@7211b7c8077ea37d8641b6271f6a365a22a5fbfa # v4.36.0
+        with:   
+          sarif_file: results.sarif
+
+  zizmor:
+    name: Run GitHub Actions Security Analysis with zizmor 🌈
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write # Required for upload-sarif (used by zizmor-action) to upload SARIF files.
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Run zizmor 🌈
+        uses: zizmorcore/zizmor-action@5f14fd08f7cf1cb1609c1e344975f152c7ee938d # v0.5.6
