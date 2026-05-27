@@ -23,9 +23,11 @@ env:
   RUSTFLAGS: -Dwarnings
   CARGO_TERM_COLOR: always
 
+permissions: {}
+
 jobs:
   test-all-features:
-    name: all feature combinations
+    name: Test feature combinations
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -33,6 +35,7 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
+          persist-credentials: false
           submodules: "recursive"
       - uses: actions-rust-lang/setup-rust-toolchain@46268bd060767258de96ed93c1251119784f2ab6 # v1.16.1
         with: 
@@ -44,15 +47,15 @@ jobs:
       - name: Show toolchain information
         working-directory: ${{ github.workspace }}
         run: |
-          rustup toolchain list
           cargo --version
+          rustup toolchain list
 
-      - name: cargo-check all possible feature combinations
+      - name: Check all possible feature combinations
         run: |
-          cargo check-all-features
-      - name: cargo-test all possible feature combinations
+          cargo all-features check
+      - name: Test all possible feature combinations
         run: |
-          cargo test-all-features
+          cargo all-features test
 
 
   # Alternative to the full feature matrix tested in the step above - somewhat faster...

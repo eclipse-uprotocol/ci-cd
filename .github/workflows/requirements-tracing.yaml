@@ -62,15 +62,20 @@ on:
         description: "URL of the requirements tracing report"
         value: ${{ jobs.tracing.outputs.tracing-report-url }}
 
+permissions: {}
+
 jobs:
   tracing:
     name: Run OpenFastTrace
     runs-on: ubuntu-latest
     outputs:
       tracing-report-url: ${{ steps.run-oft.outputs.tracing-report-url }}
+    permissions:
+      contents: write # Required by the run-oft action for uploading the requirements tracing results as an artifact
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
+          persist-credentials: false
           submodules: "recursive"
 
       - name: "Determine OpenFastTrace parameters from workflow input params"
