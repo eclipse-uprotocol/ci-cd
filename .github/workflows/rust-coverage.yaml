@@ -28,16 +28,21 @@ env:
   RUST_TOOLCHAIN: ${{ vars.RUST_TOOLCHAIN || 'stable' }}
   RUSTFLAGS: -Dwarnings
   CARGO_TERM_COLOR: always
-          
+
+permissions: {}
+
 jobs:
   coverage:
-    name: collect
+    name: Collect test coverage information
     runs-on: ubuntu-latest
     outputs:
       test_coverage_url: ${{ steps.test_coverage_html.outputs.artifact-url }}
+    permissions:
+      contents: write # Required for uploading the test coverage results as an artifact
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
+          persist-credentials: false
           submodules: "recursive"
 
       - uses: actions-rust-lang/setup-rust-toolchain@46268bd060767258de96ed93c1251119784f2ab6 # v1.16.1
