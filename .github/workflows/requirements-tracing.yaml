@@ -86,7 +86,7 @@ jobs:
 
       - name: "Determine OpenFastTrace parameters from .env file"
         if: inputs.env-file-suffix != ''
-        uses: falti/dotenv-action@73fafca04177425fd3e0a0849257015ae9d42034 # v1.2.0
+        uses: falti/dotenv-action@fff81fa3263fb96221c521b5e526e57c0c56d760 # v1.2.1
         with:
           path: ".env.${{ inputs.env-file-suffix }}"
           export-variables: true
