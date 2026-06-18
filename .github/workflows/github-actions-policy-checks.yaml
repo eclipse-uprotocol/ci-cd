@@ -18,15 +18,16 @@ name: GitHub Actions Policy Checks
 on:
   workflow_call:
 
-permissions: {}
+permissions:
+  contents: read # needed for checking out the code
 
 jobs:
   poutine:
     name: Check GitHub Workflows using poutine
     runs-on: ubuntu-latest
     permissions:
+      contents: read # needed for checking out the code
       security-events: write # Required for upload-sarif to upload SARIF files.
-      contents: read
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
@@ -42,8 +43,8 @@ jobs:
     name: Run GitHub Actions Security Analysis with zizmor 🌈
     runs-on: ubuntu-latest
     permissions:
+      contents: read # needed for checking out the code
       security-events: write # Required for upload-sarif (used by zizmor-action) to upload SARIF files.
-      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3

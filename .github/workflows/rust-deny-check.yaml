@@ -37,7 +37,8 @@ on:
         required: false
         default: --all-features
 
-permissions: {}
+permissions:
+  contents: read # needed for checking out the code
 
 jobs:
   cargo-deny:

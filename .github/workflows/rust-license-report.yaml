@@ -44,7 +44,8 @@ env:
     RUSTFLAGS: -Dwarnings
     CARGO_TERM_COLOR: always
 
-permissions: {}
+permissions:
+  contents: read # needed for checking out the code
 
 jobs:
   license_check:
@@ -52,8 +53,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       license_report_url: ${{ steps.license_report.outputs.artifact-url }}
-    permissions:
-      contents: write # Required for uploading the license report as an artifact
     steps:
     - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
       with:

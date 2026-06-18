@@ -23,7 +23,8 @@ env:
   RUSTFLAGS: -Dwarnings
   CARGO_TERM_COLOR: always  
 
-permissions: {}
+permissions:
+  contents: read # needed for checking out the code
 
 jobs:
   build:

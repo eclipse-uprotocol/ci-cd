@@ -29,7 +29,8 @@ env:
   RUSTFLAGS: -Dwarnings
   CARGO_TERM_COLOR: always
 
-permissions: {}
+permissions:
+  contents: read # needed for checking out the code
 
 jobs:
   coverage:
@@ -37,8 +38,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       test_coverage_url: ${{ steps.test_coverage_html.outputs.artifact-url }}
-    permissions:
-      contents: write # Required for uploading the test coverage results as an artifact
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
