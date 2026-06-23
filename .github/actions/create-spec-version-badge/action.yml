@@ -1,0 +1,52 @@
+# ********************************************************************************
+#  Copyright (c) 2025 Contributors to the Eclipse Foundation
+#
+#  See the NOTICE file(s) distributed with this work for additional
+#  information regarding copyright ownership.
+#
+#  This program and the accompanying materials are made available under the
+#  terms of the Apache License Version 2.0 which is available at
+#  https://www.apache.org/licenses/LICENSE-2.0
+#
+#  SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************/
+
+name: 'Create Spec Version Badge'
+description: 'Creates a badge showing the current up-spec version and whether it is the latest'
+author: 'Eclipse uProtocol'
+
+inputs:
+  current-version:
+    description: 'Current up-spec version'
+    required: true
+  latest-version:
+    description: 'Latest up-spec version'
+    required: true
+  is-latest:
+    description: 'Whether the current version is the latest (true/false)'
+    required: true
+  badge-path:
+    description: 'Path where the badge SVG will be saved'
+    required: false
+    default: '.github/badges/spec-version.svg'
+
+outputs:
+  badge-path:
+    description: 'Path to the generated badge file'
+    value: ${{ inputs.badge-path }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Create badge directory
+      shell: bash
+      run: mkdir -p "$(dirname '${{ inputs.badge-path }}')"
+
+    - name: Generate the badge SVG image
+      uses: emibcn/badge-action@v2.0.3
+      id: generate
+      with:
+        label: up-spec
+        status: ${{ inputs.current-version }}
+        color: ${{ inputs.is-latest == 'true' && 'brightgreen' || 'red' }}
+        path: ${{ inputs.badge-path }}
