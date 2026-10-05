@@ -19,9 +19,14 @@ name: Check MSRV
 
 on:
   workflow_call:
+    inputs:
+      rust_toolchain:
+        type: string
+        description: 'Rust toolchain to use for running the checks. If not set, the stable toolchain will be used.'
+        required: false
 
 env:
-  RUST_TOOLCHAIN: ${{ vars.RUST_TOOLCHAIN || 'stable' }}
+  RUST_TOOLCHAIN: ${{ inputs.rust_toolchain || 'stable' }}
   RUSTFLAGS: -Dwarnings
   CARGO_TERM_COLOR: always
 

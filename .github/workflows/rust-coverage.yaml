@@ -19,13 +19,22 @@ name: Test coverage
 
 on:
   workflow_call:
+    inputs:
+      rust_toolchain:
+        type: string
+        description: 'Rust toolchain to use for running tests. If not set, the stable toolchain will be used.'
+        required: false
+      codecov_token:
+        type: string
+        description: 'Codecov token for uploading coverage reports'
+        required: false
     outputs:
       test_coverage_url:
         description: 'URL of the test coverage artifact'
         value: ${{ jobs.coverage.outputs.test_coverage_url }}
           
 env:
-  RUST_TOOLCHAIN: ${{ vars.RUST_TOOLCHAIN || 'stable' }}
+  RUST_TOOLCHAIN: ${{ inputs.rust_toolchain || 'stable' }}
   RUSTFLAGS: -Dwarnings
   CARGO_TERM_COLOR: always
 
@@ -55,7 +64,10 @@ jobs:
       - name: Run tests and report code coverage
         run: |
           # enable nightly features so that we can also include Doctests
-          RUSTC_BOOTSTRAP=1 cargo tarpaulin --workspace --implicit-test-threads --all-features --all-targets --doc -o xml -o lcov -o html
+          RUSTC_BOOTSTRAP=1 cargo tarpaulin --workspace --all-features --all-targets \
+            --implicit-test-threads \
+            --doc \
+            -o xml -o lcov -o html
 
       - name: Upload coverage report (lcov)
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -63,12 +75,14 @@ jobs:
         with:
           name: code-coverage-lcov
           path: lcov.info
+
       - name: Upload coverage report (xml)
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         id: test_coverage_xml
         with:
           name: code-coverage-xml
           path: cobertura.xml
+
       - name: Upload coverage report (html)
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         id: test_coverage_html
@@ -77,11 +91,9 @@ jobs:
           path: tarpaulin-report.html
 
       - name: Upload coverage reports to Codecov
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        if: env.CODECOV_TOKEN != ''
+        if: ${{ inputs.codecov_token != '' }}
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          slug: ${{ vars.GITHUB_REPOSITORY }}
+          token: ${{ inputs.codecov_token }}
+          slug: ${{ github.repository }}
           files: lcov.info
