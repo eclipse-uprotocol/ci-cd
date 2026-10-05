@@ -50,7 +50,7 @@ runs:
 
     - name: Run OpenFastTrace
       id: run-oft
-      uses: itsallcode/openfasttrace-github-action@cfe57e0a005bdc3197dfe4da60da1973a1ab8e9c # v0.5.0
+      uses: itsallcode/openfasttrace-github-action@67ece5b8baee412cb4b596e46e2a03c76fd006af # v0.6.0
       with:
         file-patterns: ${{ inputs.file-patterns }}
         report-filename: ${{ env.TRACING_REPORT_FILE_NAME }}
