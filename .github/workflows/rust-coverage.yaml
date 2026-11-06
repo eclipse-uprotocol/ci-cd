@@ -47,10 +47,10 @@ jobs:
       - uses: actions-rust-lang/setup-rust-toolchain@46268bd060767258de96ed93c1251119784f2ab6 # v1.16.1
         with: 
           toolchain: ${{ env.RUST_TOOLCHAIN }}
+
       - name: Install cargo-tarpaulin
-        uses: taiki-e/install-action@ace6ebe54a6a0c86dfb5f7764b17f793b6925bc3 # v2.82.3
-        with:
-            tool: cargo-tarpaulin
+        run: |
+          cargo install cargo-tarpaulin --locked
 
       - name: Run tests and report code coverage
         run: |
@@ -63,12 +63,14 @@ jobs:
         with:
           name: code-coverage-lcov
           path: lcov.info
+
       - name: Upload coverage report (xml)
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         id: test_coverage_xml
         with:
           name: code-coverage-xml
           path: cobertura.xml
+
       - name: Upload coverage report (html)
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         id: test_coverage_html
