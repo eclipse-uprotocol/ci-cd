@@ -34,13 +34,17 @@ on:
         type: string
         default: "about.toml"
         required: false
+      rust_toolchain:
+        type: string
+        description: 'Rust toolchain to use for running the checks. If not set, the stable toolchain will be used.'
+        required: false
     outputs:
       license_report_url:
         description: "URL of the license report artifact"
         value: ${{ jobs.license_check.outputs.license_report_url }}
           
 env:
-    RUST_TOOLCHAIN: ${{ vars.RUST_TOOLCHAIN || 'stable' }}
+    RUST_TOOLCHAIN: ${{ inputs.rust_toolchain || 'stable' }}
     RUSTFLAGS: -Dwarnings
     CARGO_TERM_COLOR: always
 
@@ -66,8 +70,12 @@ jobs:
       run: |
         cargo install cargo-about
     - name: Create license report
+      shell: bash
+      env:
+        ABOUT_CONFIG: ${{ inputs.config }}
+        ABOUT_TEMPLATES: ${{ inputs.templates }}
       run: |
-        cargo about generate --config ${{ inputs.config }} ${{ inputs.templates }} > licenses.html
+        cargo about generate --config "$ABOUT_CONFIG" "$ABOUT_TEMPLATES" > licenses.html
     - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
       id: license_report
       with:

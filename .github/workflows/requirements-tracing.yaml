@@ -47,7 +47,7 @@ on:
           * `OFT_FILE_PATTERNS`
           * `OFT_TAGS`
 
-          The variable values may may also refer to other variables defined in the file:
+          The variable values may also refer to other variables defined in the file:
           
           ```sh
           OTHER_VARIABLE="*.yaml"
@@ -79,11 +79,16 @@ jobs:
 
       - name: "Determine OpenFastTrace parameters from workflow input params"
         if: inputs.env-file-suffix == ''
+        shell: bash
+        env:
+          OFT_FILE_PATTERNS: ${{ inputs.oft-file-patterns }}
+          OFT_TAGS: ${{ inputs.oft-tags }}
         run: |
-          echo "OFT_FILE_PATTERNS=${{ inputs.oft-file-patterns }}" >> $GITHUB_ENV
-          echo "OFT_TAGS=${{ inputs.oft-tags }}" >> $GITHUB_ENV
+          echo "OFT_FILE_PATTERNS=$OFT_FILE_PATTERNS" >> $GITHUB_ENV
+          echo "OFT_TAGS=$OFT_TAGS" >> $GITHUB_ENV
 
       - name: "Determine OpenFastTrace parameters from .env file"
+        id: dotenv
         if: inputs.env-file-suffix != ''
         uses: falti/dotenv-action@fff81fa3263fb96221c521b5e526e57c0c56d760 # v1.2.1
         with:
@@ -99,5 +104,8 @@ jobs:
           tags: ${{ env.OFT_TAGS }}
 
       - name: "Determine exit code"
+        shell: bash
+        env:
+          OFT_EXIT_CODE: ${{ steps.run-oft.outputs.oft-exit-code }}
         run: |
-          exit ${{ steps.run-oft.outputs.oft-exit-code }}
+          exit $OFT_EXIT_CODE
