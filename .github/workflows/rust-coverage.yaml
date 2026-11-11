@@ -70,21 +70,21 @@ jobs:
             -o xml -o lcov -o html
 
       - name: Upload coverage report (lcov)
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         id: test_coverage_lcov
         with:
           name: code-coverage-lcov
           path: lcov.info
 
       - name: Upload coverage report (xml)
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         id: test_coverage_xml
         with:
           name: code-coverage-xml
           path: cobertura.xml
 
       - name: Upload coverage report (html)
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         id: test_coverage_html
         with:
           name: code-coverage-html
